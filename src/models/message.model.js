@@ -18,6 +18,11 @@ const messageSchema = new Schema(
       required: true,
       description: "Content of the message.",
     },
+    attachment: {
+      type: String,
+      required: false,
+      description: "Optional attachment URL or path.",
+    },
   },
   { timestamps: true }
 );

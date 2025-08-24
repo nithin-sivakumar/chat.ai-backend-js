@@ -18,3 +18,14 @@ export const getAIResponse = async (history) => {
 
   return chatCompletion.choices[0]?.message?.content || "";
 };
+
+export const getAiSearchParams = async (history, question) => {
+  const messagesForGroq = [...history, { role: "system", content: question }];
+
+  const chatCompletion = await groqClient.chat.completions.create({
+    messages: messagesForGroq,
+    model: GROQ_MODEL_NAME,
+  });
+
+  return chatCompletion.choices[0]?.message?.content || "";
+};
