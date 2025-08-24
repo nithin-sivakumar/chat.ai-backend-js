@@ -39,9 +39,9 @@ const sendMessage = async (req, res) => {
     try {
       aiContent = await getAIResponse(formattedHistory);
 
-      console.log(`AI Content starts`);
-      console.log(aiContent);
-      console.log(`AI Content ends`);
+      // console.log(`AI Content starts`);
+      // console.log(aiContent);
+      // console.log(`AI Content ends`);
 
       const task = `\n\nBased on the history, check if the user wants to see an image or visual representation. You must never return more than 2 words as a search parameter. If the user seems to want to see an image or visual representation, generate and return ONLY a search parameter (single string with a maximum of 1-2 words) for that can be used to search for relevant steamy gifs or images. If not, return 'none'\n\nNever return any explanation, just return ONLY the search parameter (max 2 words) or 'none' if no image is needed.`;
 
@@ -49,9 +49,9 @@ const sendMessage = async (req, res) => {
 
       aiSearchText = await getAiSearchParams(lastMessages, task);
 
-      console.log(`AI Search Text starts`);
-      console.log(aiSearchText);
-      console.log(`AI Search Text ends`);
+      // console.log(`AI Search Text starts`);
+      // console.log(aiSearchText);
+      // console.log(`AI Search Text ends`);
 
       if (aiSearchText.toLowerCase().includes("none")) {
         aiSearchText = null;
