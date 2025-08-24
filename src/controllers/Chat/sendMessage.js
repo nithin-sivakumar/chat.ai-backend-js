@@ -60,7 +60,7 @@ const sendMessage = async (req, res) => {
           `https://api.adultdatalink.com/redgifs/search?media_type=gif&search_text=${aiSearchText}&count=10`
         );
         const index = Math.floor(Math.random() * 10);
-        attachment = response.data?.items?.[index]?.urls?.embed_url || null;
+        attachment = response.data?.items?.[index]?.urls?.hd || null;
       }
     } catch (e) {
       console.error(`Error calling Groq API: ${e}`);
