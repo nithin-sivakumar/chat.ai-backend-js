@@ -1,6 +1,8 @@
 import express from "express";
 import chatRouter from "./chat.route.js";
-import axios from "axios";
+import https from "https";
+import http from "http";
+import { URL } from "url";
 
 const indexRouter = express.Router();
 
@@ -17,23 +19,35 @@ indexRouter.route("/api/proxy").get(async (req, res) => {
     return res.status(400).json({ error: "Invalid video URL" });
   }
 
-  try {
-    const response = await axios.get(videoUrl, {
-      responseType: "stream",
-      headers: {
-        Referer: "https://www.redgifs.com/",
-        Origin: "https://www.redgifs.com",
-      },
+  const parsedUrl = new URL(videoUrl);
+  const client = parsedUrl.protocol === "https:" ? https : http;
+
+  const options = {
+    headers: {
+      Referer: "https://www.redgifs.com/",
+      Origin: "https://www.redgifs.com",
+      Range: req.headers.range || "",
+    },
+  };
+
+  client
+    .get(videoUrl, options, (videoRes) => {
+      res.writeHead(videoRes.statusCode || 200, {
+        "Content-Type": videoRes.headers["content-type"] || "video/mp4",
+        "Content-Length": videoRes.headers["content-length"] || undefined,
+        "Accept-Ranges": videoRes.headers["accept-ranges"] || "bytes",
+        "Content-Range": videoRes.headers["content-range"] || undefined,
+        "Cache-Control": "public, max-age=3600",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "Content-Length, Content-Range",
+      });
+
+      videoRes.pipe(res);
+    })
+    .on("error", (err) => {
+      console.error("Stream error:", err);
+      res.status(500).json({ error: "Proxy stream error" });
     });
-
-    res.setHeader("Content-Type", "video/mp4");
-    res.setHeader("Cache-Control", "public, max-age=3600");
-
-    response.data.pipe(res);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Proxy error" });
-  }
 });
 
 export default indexRouter;
