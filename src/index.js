@@ -2,6 +2,7 @@ import { env } from "./global/constants.js";
 import http from "http";
 import app from "./app.js";
 import connectDB from "./db/connect.js";
+import "./jobs/autoping.js";
 
 const PORT = env.PORT || 3000;
 
