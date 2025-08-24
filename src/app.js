@@ -10,10 +10,12 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://chat-ai-one-chi.vercel.app/",
+      "https://chat-ai-one-chi.vercel.app",
     ],
   })
 );
+
+app.options("*", cors());
 
 app.use(express.json());
 
