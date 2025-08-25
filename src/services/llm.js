@@ -5,8 +5,9 @@ const groqClient = new Groq({ apiKey: env.GROQ_API_KEY });
 const SYSTEM_PROMPT = env.SYSTEM_PROMPT || "You are a helpful assistant.";
 const GROQ_MODEL_NAME = env.GROQ_MODEL_NAME || "mixtral-8x7b-32768";
 
-export const getAIResponse = async (history) => {
+export const getAIResponse = async (history, userIntro) => {
   const messagesForGroq = [
+    { role: "user", content: userIntro },
     { role: "system", content: SYSTEM_PROMPT },
     ...history,
   ];

@@ -2,6 +2,7 @@ import Message from "../../models/message.model.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 import { getAiSearchParams, getAIResponse } from "../../services/llm.js";
 import axios from "axios";
+import { User } from "../../models/user.model.js";
 
 const MESSAGE_HISTORY_LIMIT = 10;
 
@@ -37,7 +38,10 @@ const sendMessage = async (req, res) => {
       aiSearchText,
       attachment = null;
     try {
-      aiContent = await getAIResponse(formattedHistory);
+      const userDetails = await User.findOne({ conversation_id }).lean();
+      const userIntro = `My name is ${userDetails.name}. I am a ${userDetails.age} year old ${userDetails.gender} interested in ${userDetails.orientation}.`;
+
+      aiContent = await getAIResponse(formattedHistory, userIntro);
 
       // console.log(`AI Content starts`);
       // console.log(aiContent);
